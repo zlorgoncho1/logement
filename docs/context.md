@@ -1,0 +1,143 @@
+# 🏠 **Document de Spécifications - Application de Gestion de Logements (Style RBNB Sénégal)**
+
+## 🎯 **Objectif de l’Application**
+
+Créer une plateforme web/mobile qui connecte des personnes à la recherche de logements (pour une courte ou longue durée) avec des agents immobiliers ou propriétaires qui publient leurs biens. L’application vise à moderniser l’accès au logement au Sénégal tout en intégrant les spécificités locales : moyens de paiement, localisation, sécurité, etc.
+
+---
+
+## 👥 **Acteurs Principaux**
+
+### 1. **Client**
+
+> Personnes à la recherche d’un logement.
+
+**Fonctionnalités principales :**
+
+* Créer un compte (email, téléphone, OTP)
+* Rechercher un logement par lieu, budget, type (maison, studio…)
+* Consulter les fiches de logement (photos, description, prix, disponibilité)
+* Réserver un logement en ligne
+* Payer une réservation (Mobile Money, carte bancaire, espèce)
+* Laisser un avis / notation
+* Discuter avec l’agent via messagerie intégrée
+* Être notifié des réponses ou changements (push/SMS)
+
+### 2. **Agent Immobilier**
+
+> Professionnels ou propriétaires qui publient les logements.
+
+**Fonctionnalités principales :**
+
+* Créer un compte professionnel
+* Ajouter un bien (titre, type, adresse, description, prix, photos, équipements)
+* Gérer les disponibilités et réservations
+* Répondre aux messages des clients
+* Visualiser ses statistiques de publication et revenus
+* Recevoir des paiements via la plateforme
+* Être notifié des nouvelles demandes ou réservations
+
+### 3. **Administrateur**
+
+> Utilisateur interne (personnel de la plateforme).
+
+**Fonctionnalités principales :**
+
+* Accéder au back office sécurisé
+* Gérer les comptes utilisateurs (clients, agents)
+* Modérer les annonces et les commentaires
+* Gérer les litiges ou réclamations
+* Contrôler les paiements / remboursements
+* Exporter des rapports (logements publiés, taux de réservation, CA généré)
+* Gérer les paramètres de la plateforme (taxes, commissions, etc.)
+
+---
+
+## ⚙️ **Besoins Fonctionnels**
+
+### 🔍 Recherche & Navigation
+
+* Filtrage par localisation, prix, type de logement, équipements
+* Carte interactive avec les logements disponibles
+* Sauvegarde de recherches et favoris
+
+### 🏠 Gestion de Logements
+
+* CRUD (Créer, Lire, Modifier, Supprimer) sur les biens immobiliers
+* Upload sécurisé de photos
+* Ajout de disponibilité par calendrier
+
+### 💬 Messagerie
+
+* Système de messagerie intégrée en temps réel
+* Notifications push ou SMS en cas de nouveau message
+
+### 💳 Paiement & Réservation
+
+* Système de réservation avec acompte ou paiement complet
+* Intégration Mobile Money (Orange Money, Wave, Free Money)
+* Génération automatique de facture
+* Politique d’annulation et remboursement
+
+### ⭐ Évaluation & Commentaires
+
+* Notation des logements par les clients
+* Système d’avertissement en cas de comportement abusif
+
+### 🔐 Sécurité & Authentification
+
+* Authentification OTP (téléphone)
+* Connexion via email + mot de passe
+* Vérification de l’identité des agents (KYC)
+
+---
+
+## 📋 **Besoins Non Fonctionnels**
+
+### 🔒 Sécurité
+
+* Données cryptées (SSL, chiffrement des mots de passe)
+* Authentification multi-facteur (MFA pour l’admin)
+* Prévention anti-fraude (plagiat d’annonce, spam)
+
+### 🌐 Accessibilité & UX
+
+* Interface mobile first (compatible téléphones sénégalais)
+* Application bilingue : Français & Wolof (optionnel)
+* Navigation rapide même avec une faible connexion
+
+### 📶 Offline First (optionnel à terme)
+
+* Consultation de favoris en mode hors-ligne
+* Synchronisation des réservations quand internet revient
+
+### 🏎️ Performance
+
+* Chargement rapide des pages & images
+* Mise en cache des résultats de recherche
+
+### ⚙️ Maintenance & Scalabilité
+
+* Architecture modulaire (microservices ou monorepo structuré)
+* Journalisation des actions (logs)
+* Tests unitaires & e2e
+
+### ✅ Conformité & Régulation
+
+* Respect du RGPD ou lois locales sur les données personnelles
+* Conditions Générales d’Utilisation (CGU)
+* Politique de confidentialité claire
+
+---
+
+## 📈 **Extensions Possibles (Évolution future)**
+
+* Mode "colocation" / logements partagés
+* Intégration avec agences locales partenaires
+* Système de parrainage et promotions
+* Application mobile native (Flutter/Ionic)
+* Tableau de bord analytique pour les agents
+
+---
+
+Souhaites-tu que je t'aide à créer une **maquette UX mobile-first** ou un **schéma d’architecture technique** pour cette application ?

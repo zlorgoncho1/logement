@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LogeSénégal{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div>
+                    <a href="/" class="text-xl font-bold text-gray-800 hover:text-blue-500">LogeSénégal</a>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="{% url 'index' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Accueil</a>
+                    <a href="{% url 'properties:property_search' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Rechercher un logement</a>
+                    <a href="#" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Publier un bien</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'bookings:booking_list' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</a>
+                        <form action="{% url 'accounts:logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Déconnexion</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Connexion</a>
+                        <a href="{% url 'accounts:register_start' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Inscription</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow py-8 px-4 sm:px-6 lg:px-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10 mt-auto">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-gray-400">&copy; 2023 LogeSénégal. Tous droits réservés.</p>
+            <div class="mt-4">
+                <a href="#" class="text-gray-400 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Politique de confidentialité</a>
+                <a href="#" class="text-gray-400 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Conditions d'utilisation</a>
+                <a href="#" class="text-gray-400 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

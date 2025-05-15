@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<header class="hero-bg text-white">
+    <div class="container mx-auto px-6 py-24 text-center bg-black bg-opacity-50">
+        <h1 class="text-4xl font-bold mb-2 md:text-5xl">Trouvez votre prochain logement au Sénégal</h1>
+        <p class="text-lg mb-8 md:text-xl">Connectons locataires et propriétaires en toute simplicité.</p>
+        <a href="#" class="bg-blue-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition duration-300">Commencer ma recherche</a>
+    </div>
+</header>
+
+<!-- Introduction Section -->
+<section class="py-16">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Bienvenue sur LogeSénégal</h2>
+        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Notre plateforme vise à moderniser l'accès au logement au Sénégal en connectant efficacement ceux qui cherchent un toit et ceux qui en proposent. Nous intégrons les spécificités locales pour une expérience optimale.
+        </p>
+    </div>
+</section>
+
+<!-- For Clients Section -->
+<section class="bg-white py-16">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Pour les <span class="text-blue-500">Clients</span></h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-3 text-blue-600">Recherche Facilitée</h3>
+                <p class="text-gray-700">Trouvez le logement idéal grâce à des filtres précis : lieu, budget, type de bien (maison, studio, appartement...).</p>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-3 text-blue-600">Réservation Sécurisée</h3>
+                <p class="text-gray-700">Réservez en ligne et payez en toute confiance via Mobile Money, carte bancaire ou même en espèces selon les options.</p>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-3 text-blue-600">Communication Directe</h3>
+                <p class="text-gray-700">Discutez directement avec les agents immobiliers ou propriétaires grâce à notre messagerie intégrée.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- For Agents Section -->
+<section class="py-16">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Pour les <span class="text-green-500">Agents Immobiliers</span></h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-3 text-green-600">Publiez Facilement</h3>
+                <p class="text-gray-700">Ajoutez vos biens avec toutes les informations clés : titre, photos, prix, équipements et gérez vos disponibilités.</p>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-3 text-green-600">Gérez Vos Annonces</h3>
+                <p class="text-gray-700">Gardez le contrôle sur vos publications, modifiez-les et suivez les réservations en temps réel.</p>
+            </div>
+            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold mb-3 text-green-600">Maximisez Vos Revenus</h3>
+                <p class="text-gray-700">Recevez les paiements via la plateforme et suivez vos statistiques de performance pour optimiser vos offres.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="bg-blue-600 text-white py-20">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold mb-6">Prêt à trouver ou à proposer un logement ?</h2>
+        <p class="text-lg mb-8">Rejoignez notre communauté dès aujourd'hui et découvrez une nouvelle façon de gérer le logement au Sénégal.</p>
+        <div class="space-x-0 md:space-x-4 space-y-4 md:space-y-0">
+            <a href="#" class="bg-white text-blue-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-300 inline-block">Je cherche un logement</a>
+            <a href="#" class="border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300 inline-block">Je propose un logement</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

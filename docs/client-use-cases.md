@@ -1,0 +1,245 @@
+# 📘 **Document de Cas d’Utilisation – Plateforme de Gestion de Logement au Sénégal**
+
+## 👥 **Acteurs**
+
+1. **Client** : Personne à la recherche d’un logement à louer.
+2. **Agent Immobilier** : Propriétaire ou professionnel publiant un bien immobilier.
+3. **Administrateur** : Personnel de la plateforme assurant le contrôle, la modération et la supervision.
+
+---
+
+## 🎯 **Cas d’Utilisation : Client**
+
+### 🔹 **UC1 - Créer un compte**
+
+* **But** : S’inscrire sur la plateforme.
+* **Préconditions** : Accès à un téléphone ou une adresse email.
+* **Scénario** :
+
+  1. L’utilisateur saisit son numéro ou email.
+  2. Il reçoit un OTP pour valider son identité.
+  3. Il complète les informations de profil (nom, prénom, etc.).
+  4. Le compte est créé.
+
+### 🔹 **UC2 - Rechercher un logement**
+
+* **But** : Trouver un logement selon ses besoins.
+* **Préconditions** : L’utilisateur est connecté.
+* **Scénario** :
+
+  1. Il entre des filtres (lieu, type, prix…).
+  2. Une liste de logements est affichée.
+  3. Il consulte les fiches détaillées.
+
+### 🔹 **UC3 - Réserver un logement**
+
+* **But** : Effectuer une réservation.
+* **Scénario** :
+
+  1. Il choisit un logement et ses dates depuis la page détaillée.
+  2. Il initie la réservation.
+  3. Il paie une acompte, utilise Naboopay. (Acompte / Hooks)
+  4. Il reçoit une confirmation.
+
+### 🔹 **UC4 - Payer une réservation**
+
+* **But** : Régler en ligne.
+* **Options de paiement** : Mobile Money (OM, Wave…), carte bancaire, ou espèces.
+* **Scénario** :
+
+  1. L’utilisateur choisit le moyen de paiement.
+  2. Il reçoit une confirmation ou une facture.
+
+### 🔹 **UC5 - Évaluer un logement**
+
+* **But** : Partager un avis.
+* **Préconditions** : Avoir effectué une réservation.
+* **Scénario** :
+
+  1. Après le séjour, un formulaire s’ouvre.
+  2. L’utilisateur note et commente.
+  3. L’évaluation est publiée/modérée.
+
+### 🔹 **UC6 - Messagerie avec l’agent**
+
+* **But** : Poser des questions sur un logement.
+* **Scénario** :
+
+  1. Il ouvre le chat d’un logement.
+  2. Envoie des messages à l’agent.
+  3. Reçoit des réponses avec notifications.
+
+### 🔹 **UC7 - Gérer son compte**
+
+* **But** : Modifier ses infos personnelles.
+* **Scénario** :
+
+  1. Il accède à la section profil.
+  2. Modifie les infos (photo, mot de passe…).
+  3. Les changements sont enregistrés.
+
+---
+
+Très bien, poursuivons avec le deuxième acteur :
+
+---
+
+## 👔 **Cas d’Utilisation : Agent Immobilier**
+
+### 🔹 **UC1 - Créer un compte professionnel**
+
+* **But** : S’inscrire pour publier des biens.
+* **Préconditions** : Avoir une pièce justificative (KYC).
+* **Scénario** :
+
+  1. L’agent choisit l’option "Compte professionnel".
+  2. Renseigne ses informations (nom, email, téléphone…).
+  3. Téléverse des pièces justificatives.
+  4. Soumet le formulaire.
+  5. L’admin valide ou rejette le compte après vérification.
+
+### 🔹 **UC2 - Ajouter un logement**
+
+* **But** : Publier un bien à louer.
+* **Scénario** :
+
+  1. Il clique sur "Ajouter un bien".
+  2. Renseigne les infos : titre, description, prix, adresse, photos, équipements.
+  3. Déclare la disponibilité via un calendrier.
+  4. Enregistre et publie.
+
+### 🔹 **UC3 - Gérer ses annonces**
+
+* **But** : Modifier ou supprimer un bien existant.
+* **Scénario** :
+
+  1. Accède à la liste de ses annonces.
+  2. Peut les modifier ou désactiver temporairement.
+
+### 🔹 **UC4 - Gérer les disponibilités**
+
+* **But** : Mettre à jour le calendrier d’un bien.
+* **Scénario** :
+
+  1. Va sur la fiche du logement.
+  2. Accède au calendrier de disponibilité.
+  3. Bloque ou libère des dates.
+
+### 🔹 **UC5 - Répondre aux messages des clients**
+
+* **But** : Informer ou rassurer les potentiels locataires.
+* **Scénario** :
+
+  1. Consulte la messagerie.
+  2. Répond aux questions liées à ses logements.
+
+### 🔹 **UC6 - Suivre ses statistiques**
+
+* **But** : Analyser ses performances.
+* **Scénario** :
+
+  1. Accède au tableau de bord.
+  2. Visualise ses revenus, taux de réservation, etc.
+
+### 🔹 **UC7 - Recevoir des paiements**
+
+* **But** : Être payé via la plateforme.
+* **Scénario** :
+
+  1. L’agent est notifié d’une réservation confirmée.
+  2. Le paiement est versé selon les modalités (après check-in ou acompte).
+  3. Il peut suivre les versements dans son espace.
+
+### 🔹 **UC8 - Gérer son profil pro**
+
+* **But** : Mettre à jour ses coordonnées et documents.
+* **Scénario** :
+
+  1. Va dans "Profil professionnel".
+  2. Modifie ses infos ou envoie de nouveaux justificatifs.
+
+---
+
+Parfait, voici maintenant les cas d’utilisation pour le **troisième acteur : l’Administrateur**.
+
+---
+
+## 🛠️ **Cas d’Utilisation : Administrateur**
+
+### 🔹 **UC1 - Se connecter au back-office**
+
+* **But** : Accéder à l’interface d’administration.
+* **Préconditions** : Disposer d’un compte admin validé.
+* **Scénario** :
+
+  1. L’admin saisit ses identifiants.
+  2. Une vérification MFA peut être requise.
+  3. Accède au tableau de bord du back-office.
+
+### 🔹 **UC2 - Gérer les comptes utilisateurs**
+
+* **But** : Valider ou suspendre des comptes client ou agent.
+* **Scénario** :
+
+  1. Accède à la liste des utilisateurs.
+  2. Peut filtrer par statut ou rôle.
+  3. Active, désactive ou supprime un compte.
+
+### 🔹 **UC3 - Modérer les annonces**
+
+* **But** : Contrôler les biens publiés.
+* **Scénario** :
+
+  1. Accède à la liste des logements publiés.
+  2. Vérifie les informations et photos.
+  3. Approuve, rejette ou désactive une annonce.
+
+### 🔹 **UC4 - Gérer les commentaires et évaluations**
+
+* **But** : Supprimer les contenus inappropriés.
+* **Scénario** :
+
+  1. Liste les avis récents.
+  2. Peut supprimer ou signaler un abus.
+  3. Peut contacter l’auteur en cas de litige.
+
+### 🔹 **UC5 - Gérer les litiges et réclamations**
+
+* **But** : Résoudre des conflits entre utilisateurs.
+* **Scénario** :
+
+  1. Accède au module "Réclamations".
+  2. Consulte les détails du litige.
+  3. Prend contact avec les parties.
+  4. Décide d’un remboursement, blocage ou avertissement.
+
+### 🔹 **UC6 - Contrôler les paiements et remboursements**
+
+* **But** : Valider ou annuler des transactions.
+* **Scénario** :
+
+  1. Visualise l’historique des paiements.
+  2. Peut forcer un remboursement ou suspendre un versement.
+
+### 🔹 **UC7 - Exporter des rapports**
+
+* **But** : Suivre les performances de la plateforme.
+* **Scénario** :
+
+  1. Sélectionne la période et les filtres (revenus, logements, utilisateurs…).
+  2. Télécharge un rapport (CSV, PDF).
+  3. Utilise les données pour analyse.
+
+### 🔹 **UC8 - Configurer les paramètres globaux**
+
+* **But** : Modifier les règles de la plateforme.
+* **Exemples** :
+
+  * Taux de commission
+  * Seuil d’acompte
+  * Conditions d’annulation
+* **Scénario** :
+
+  1. Accède aux paramètres généraux.
+  2. Modifie les champs souhaités.
+  3. Enregistre les nouveaux réglages.

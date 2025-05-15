@@ -1,0 +1,12 @@
+{% if properties %}
+    <h2 class="text-2xl font-semibold mb-4 text-gray-700">Résultats de la recherche</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for property in properties %}
+            {% include 'properties/property_card.html' with property=property %}
+        {% endfor %}
+    </div>
+{% elif request.GET %}
+    <p class="text-center text-gray-600 py-10">Aucun logement ne correspond à vos critères de recherche.</p>
+{% else %}
+    <p class="text-center text-gray-600 py-10">Veuillez utiliser le formulaire ci-dessus pour rechercher des logements.</p>
+{% endif %} 
