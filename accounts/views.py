@@ -7,14 +7,18 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import View
+from django.db import transaction
 
 from .forms import (
     ClientRegistrationStartForm, 
     OTPVerificationForm, 
     ClientProfileCompletionForm,
-    UserLoginForm
+    UserLoginForm,
+    AgentRegistrationForm
 )
 from .models import CustomUser # Ensure CustomUser is imported
+from fichiers.models import Fichier # For creating Fichier instances
 
 # For dummy OTP generation
 def generate_otp(length=6):
@@ -135,3 +139,53 @@ class ClientProfileCompletionView(FormView):
     def form_invalid(self, form):
         messages.error(self.request, _("Veuillez corriger les erreurs ci-dessous."))
         return super().form_invalid(form)
+
+class AgentRegisterView(View):
+    template_name = 'accounts/agent_register.html'
+    form_class = AgentRegistrationForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                with transaction.atomic(): # Ensure all operations succeed or none do
+                    # 1. Create CustomUser
+                    user = CustomUser.objects.create_user(
+                        email=form.cleaned_data['email'],
+                        password=form.cleaned_data['password'],
+                        nom=form.cleaned_data['nom'],
+                        prenom=form.cleaned_data['prenom'],
+                        telephone=form.cleaned_data.get('telephone'),
+                        type=CustomUser.UserType.AGENT,
+                        is_active=False,  # Account inactive until KYC validated by admin
+                        kyc_verified=False # KYC not verified initially
+                    )
+
+                    # 2. Handle KYC Document Upload and Fichier creation
+                    kyc_document_file = form.cleaned_data.get('document_kyc')
+                    if kyc_document_file:
+                        fichier_instance = Fichier.objects.create(
+                            fichier=kyc_document_file,
+                            nom_fichier=kyc_document_file.name
+                            # If Fichier model has a field to link to the user, set it here if appropriate
+                            # e.g., uploaded_by=user, if such a field exists on Fichier
+                        )
+                        # Add to the user's KYC documents
+                        user.documents_kyc.add(fichier_instance)
+                        # user.save() # Not strictly necessary after .add() for M2M unless other fields on user changed before this call.
+                                      # create_user already saves the user.
+
+                messages.success(request, _("Votre compte agent a été créé avec succès. Il est en attente de validation par un administrateur après vérification de votre document KYC."))
+                # Redirect to login or a specific "pending review" page
+                return redirect(reverse_lazy('accounts:login')) 
+            
+            except Exception as e:
+                # It's good practice to log the error: import logging; logger = logging.getLogger(__name__); logger.error(str(e))
+                messages.error(request, _("Une erreur s'est produite lors de la création de votre compte. Veuillez réessayer."))
+                # Consider more specific error messages for common issues if possible
+
+        return render(request, self.template_name, {'form': form})

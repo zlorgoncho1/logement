@@ -1,78 +1,113 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
 
-{% block content %}
-<!-- Hero Section -->
-<header class="hero-bg text-white">
-    <div class="container mx-auto px-6 py-24 text-center bg-black bg-opacity-50">
-        <h1 class="text-4xl font-bold mb-2 md:text-5xl">Trouvez votre prochain logement au Sénégal</h1>
-        <p class="text-lg mb-8 md:text-xl">Connectons locataires et propriétaires en toute simplicité.</p>
-        <a href="#" class="bg-blue-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-600 transition duration-300">Commencer ma recherche</a>
-    </div>
-</header>
-
-<!-- Introduction Section -->
-<section class="py-16">
-    <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Bienvenue sur LogeSénégal</h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Notre plateforme vise à moderniser l'accès au logement au Sénégal en connectant efficacement ceux qui cherchent un toit et ceux qui en proposent. Nous intégrons les spécificités locales pour une expérience optimale.
-        </p>
-    </div>
-</section>
-
-<!-- For Clients Section -->
-<section class="bg-white py-16">
-    <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Pour les <span class="text-blue-500">Clients</span></h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold mb-3 text-blue-600">Recherche Facilitée</h3>
-                <p class="text-gray-700">Trouvez le logement idéal grâce à des filtres précis : lieu, budget, type de bien (maison, studio, appartement...).</p>
-            </div>
-            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold mb-3 text-blue-600">Réservation Sécurisée</h3>
-                <p class="text-gray-700">Réservez en ligne et payez en toute confiance via Mobile Money, carte bancaire ou même en espèces selon les options.</p>
-            </div>
-            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold mb-3 text-blue-600">Communication Directe</h3>
-                <p class="text-gray-700">Discutez directement avec les agents immobiliers ou propriétaires grâce à notre messagerie intégrée.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- For Agents Section -->
-<section class="py-16">
-    <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Pour les <span class="text-green-500">Agents Immobiliers</span></h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold mb-3 text-green-600">Publiez Facilement</h3>
-                <p class="text-gray-700">Ajoutez vos biens avec toutes les informations clés : titre, photos, prix, équipements et gérez vos disponibilités.</p>
-            </div>
-            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold mb-3 text-green-600">Gérez Vos Annonces</h3>
-                <p class="text-gray-700">Gardez le contrôle sur vos publications, modifiez-les et suivez les réservations en temps réel.</p>
-            </div>
-            <div class="bg-gray-50 p-6 rounded-lg shadow-lg">
-                <h3 class="text-xl font-semibold mb-3 text-green-600">Maximisez Vos Revenus</h3>
-                <p class="text-gray-700">Recevez les paiements via la plateforme et suivez vos statistiques de performance pour optimiser vos offres.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Call to Action Section -->
-<section class="bg-blue-600 text-white py-20">
-    <div class="container mx-auto px-6 text-center">
-        <h2 class="text-3xl font-bold mb-6">Prêt à trouver ou à proposer un logement ?</h2>
-        <p class="text-lg mb-8">Rejoignez notre communauté dès aujourd'hui et découvrez une nouvelle façon de gérer le logement au Sénégal.</p>
-        <div class="space-x-0 md:space-x-4 space-y-4 md:space-y-0">
-            <a href="#" class="bg-white text-blue-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition duration-300 inline-block">Je cherche un logement</a>
-            <a href="#" class="border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-blue-600 transition duration-300 inline-block">Je propose un logement</a>
-        </div>
-    </div>
-</section>
+{% block title %}
+    {% if is_agent_dashboard %}
+        {% trans "Tableau de Bord Agent" %}
+    {% else %}
+        {% trans "Bienvenue sur LogeSénégal" %}
+    {% endif %}
 {% endblock %}
+
+{# This block will be used if user is an agent, as per base.html logic #}
+{% block agent_content %}
+    <div class="container mx-auto px-6 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">{% trans "Mon Tableau de Bord Agent" %}</h1>
+            <a href="{% url 'properties:property_add' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {% trans "Ajouter un Logement" %}
+            </a>
+        </div>
+        
+        <p class="text-lg text-gray-700 mb-6">{% trans "Bienvenue" %}, {{ request.user.prenom|default:request.user.email }}. {% trans "Gérez vos annonces et vos disponibilités ici." %}</p>
+
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">{% trans "Mes Annonces Récentes" %}</h2>
+        {% if agent_properties %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for property_item in agent_properties %}
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        {% if property_item.photos.first %}
+                            <img src="{{ property_item.photos.first.fichier.url }}" alt="{{ property_item.titre }}" class="w-full h-48 object-cover">
+                        {% else %}
+                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                <span class="text-gray-500">{% trans "Pas d'image" %}</span>
+                            </div>
+                        {% endif %}
+                        <div class="p-4">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ property_item.titre }}</h3>
+                            <p class="text-sm text-gray-600 mb-1"><span class="font-semibold">{% trans "Adresse" %}:</span> {{ property_item.adresse|truncatewords:10 }}</p>
+                            <p class="text-sm text-gray-600 mb-1"><span class="font-semibold">{% trans "Prix" %}:</span> {{ property_item.prix_par_nuit|floatformat:0 }} FCFA / {% trans "nuit" %}</p>
+                            <p class="text-sm text-gray-600 mb-3">
+                                <span class="font-semibold">{% trans "Statut" %}:</span> 
+                                <span class="px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if property_item.statut == 'PUBLIE' %}bg-green-100 text-green-800
+                                    {% elif property_item.statut == 'DESACTIVE' %}bg-red-100 text-red-800
+                                    {% elif property_item.statut == 'ATTENTE' %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {{ property_item.get_statut_display }}
+                                </span>
+                            </p>
+                            <div class="flex justify-between items-center mt-4">
+                                <a href="{% url 'properties:property_edit' property_item.pk %}" class="text-sm text-blue-600 hover:text-blue-800 font-semibold">{% trans "Modifier" %}</a>
+                                <a href="{% url 'properties:property_manage_availability' property_item.pk %}" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold">{% trans "Gérer Dispos." %}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if agent_properties.count >= 5 %}
+            <div class="mt-6 text-center">
+                <a href="{% url 'properties:agent_property_list' %}" class="text-blue-600 hover:text-blue-800 font-semibold">{% trans "Voir toutes mes annonces" %} &rarr;</a>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-10 px-6 bg-white rounded-lg shadow">
+                <img src="{% static 'img/empty-folder.svg' %}" alt="{% trans 'Aucune annonce' %}" class="mx-auto h-24 w-24 text-gray-400">
+                <h3 class="mt-2 text-lg font-medium text-gray-900">{% trans "Vous n'avez aucune annonce pour le moment." %}</h3>
+                <p class="mt-1 text-sm text-gray-500">{% trans "Créez votre première annonce pour commencer à louer vos biens!" %}</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock agent_content %}
+
+{# This block will be used if user is not an agent, as per base.html logic #}
+{% block content %}
+    <div class="container mx-auto px-6 py-8">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 leading-tight">{% trans "Trouvez le logement de vos rêves au Sénégal" %}</h1>
+            <p class="text-lg text-gray-600 mt-4">{% trans "Parcourez des milliers d'annonces vérifiées et réservez en toute sécurité." %}</p>
+            <a href="{% url 'properties:property_search' %}" class="mt-8 inline-block bg-blue-600 text-white font-bold text-lg px-8 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+                {% trans "Commencer ma recherche" %}
+            </a>
+        </div>
+
+        {% if featured_properties %}
+            <h2 class="text-3xl font-semibold text-gray-800 mb-8 text-center">{% trans "Logements à la Une" %}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for property_item in featured_properties %}
+                    <div class="bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition duration-300">
+                        <a href="{% url 'properties:property_detail' property_item.pk %}" class="block">
+                            {% if property_item.photos.first %}
+                                <img src="{{ property_item.photos.first.fichier.url }}" alt="{{ property_item.titre }}" class="w-full h-56 object-cover">
+                            {% else %}
+                                <div class="w-full h-56 bg-gray-200 flex items-center justify-center">
+                                    <span class="text-gray-500">{% trans "Image non disponible" %}</span>
+                                </div>
+                            {% endif %}
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold text-gray-800 mb-2">{{ property_item.titre }}</h3>
+                                <p_="text-md text-gray-700 mb-1">{{ property_item.type_display }} - {{ property_item.adresse|truncatewords:6 }}</p>
+                                <p class="text-lg font-semibold text-blue-600 mt-2">{{ property_item.prix_par_nuit|floatformat:0 }} FCFA <span class="text-sm text-gray-500">/ {% trans "nuit" %}</span></p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center text-gray-600">{% trans "Aucun logement à la une pour le moment." %}</p>
+        {% endif %}
+    </div>
+{% endblock content %}
 
 

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from fichiers.models import Fichier # Make sure Fichier is imported
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -48,6 +49,20 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False) # Required for Django admin
     is_active = models.BooleanField(default=True) # Users active by default, can be deactivated by admin
     is_superuser = models.BooleanField(default=False) # Explicitly add is_superuser
+
+    # Fields for Agent KYC
+    documents_kyc = models.ManyToManyField(
+        Fichier,
+        verbose_name=_('documents KYC'),
+        blank=True, # KYC can be uploaded, but might not be mandatory at initial creation for all flows
+        related_name='user_kyc_documents',
+        help_text=_('Documents KYC soumis par l\'utilisateur (principalement pour les agents).')
+    )
+    kyc_verified = models.BooleanField(
+        _('KYC vérifié'),
+        default=False,
+        help_text=_('Indique si les documents KYC de l\'utilisateur (agent) ont été vérifiés et approuvés.')
+    )
 
     # Add related_name to avoid clashes with auth.User default
     groups = models.ManyToManyField(
@@ -105,9 +120,6 @@ class AgentImmobilier(CustomUser):
         proxy = True
         verbose_name = _('Agent Immobilier')
         verbose_name_plural = _('Agents Immobiliers')
-
-    # Add specific agent fields if needed, e.g., documentsKYC
-    # documentsKYC = models.ManyToManyField('fichiers.Fichier', blank=True, related_name='kyc_for_agent')
 
 # Consider adding a separate Fichier app/model later if needed
 # Or use a JSONField/FileField directly on AgentImmobilier if simple

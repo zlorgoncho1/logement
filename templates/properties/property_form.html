@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Ajouter un nouveau logement" %}{% endblock %}
+
+{% block agent_content %}
+<div class="container mx-auto mt-10 px-4">
+    <div class="max-w-7xl mx-auto bg-white p-8 border border-gray-300 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">{% trans "Publier un nouveau logement" %}</h2>
+
+        {% if messages %}
+            <div class="mb-4">
+            {% for message in messages %}
+                <div class="p-4 rounded-md 
+                    {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700
+                    {% elif message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700
+                    {% else %}bg-blue-100 border border-blue-400 text-blue-700{% endif %}"
+                     role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors or availability_formset.non_form_errors %}
+                <div class="mb-6 p-4 rounded-md bg-red-100 border border-red-400 text-red-700" role="alert">
+                    <p class="font-bold">{% trans "Veuillez corriger les erreurs ci-dessous :" %}</p>
+                    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                    {% for error in availability_formset.non_form_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column: Property Information -->
+                <div class="space-y-6">
+                    <fieldset class="pb-4 border-b">
+                        <legend class="text-xl font-semibold mb-4 text-gray-700">{% trans "Informations Générales sur le Logement" %}</legend>
+                        {% for field in form %}
+                            {% if field.name != 'photos_upload' %}
+                                <div class="mb-4">
+                                    <label for="{{ field.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-1">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.help_text %}<p class="text-gray-600 text-xs italic mt-1">{{ field.help_text|safe }}</p>{% endif %}
+                                    {% for error in field.errors %}<p class="text-red-500 text-xs italic mt-1">{{ error }}</p>{% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </fieldset>
+
+                    <fieldset class="pb-4">
+                        <legend class="text-xl font-semibold mb-4 text-gray-700">{% trans "Photos du Logement" %}</legend>
+                        <div class="mb-4">
+                            <label for="{{ form.photos_upload.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-1">{{ form.photos_upload.label }}</label>
+                            {{ form.photos_upload }}
+                            {% if form.photos_upload.help_text %}<p class="text-gray-600 text-xs italic mt-1">{{ form.photos_upload.help_text|safe }}</p>{% endif %}
+                            {% for error in form.photos_upload.errors %}<p class="text-red-500 text-xs italic mt-1">{{ error }}</p>{% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <!-- Right Column: Availability -->
+                <div class="space-y-6">
+                    <fieldset>
+                        <legend class="text-xl font-semibold mb-4 text-gray-700">{% trans "Disponibilités du Logement" %}</legend>
+                        {{ availability_formset.management_form }}
+                        <div class="max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
+                            {% for avail_form in availability_formset %}
+                                <div class="availability-form mb-6 p-4 border rounded-md {% if avail_form.errors %}border-red-300 bg-red-50{% else %}border-gray-200{% endif %}">
+                                    <h4 class="text-md font-semibold text-gray-600 mb-2">{% trans "Période de disponibilité" %} {% if availability_formset.can_delete %}({{ forloop.counter }}){% endif %}</h4>
+                                    {% if avail_form.non_field_errors %}
+                                        <div class="text-red-500 text-sm mb-2">
+                                        {% for error in avail_form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <div class="grid grid-cols-2 gap-4 items-end">
+                                        {% for field in avail_form  %}
+                                            {% if field.name not in 'DELETE,id,logement' %}
+                                            <div class="mb-2">
+                                                <label for="{{ field.id_for_label }}" class="block text-gray-700 text-xs font-bold mb-1">{{ field.label }}</label>
+                                                {{ field }}
+                                                {% for error in field.errors %}<p class="text-red-500 text-xs italic mt-1">{{ error }}</p>{% endfor %}
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if availability_formset.can_delete and avail_form.instance.pk %}
+                                            <div class="mb-2 self-end">
+                                                {{ avail_form.DELETE.label_tag }}
+                                                {{ avail_form.DELETE }}
+                                                <label for="{{ avail_form.DELETE.id_for_label }}" class="ml-2 text-sm text-gray-700">{% trans "Supprimer cette période" %}</label>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    {% if avail_form.instance.pk and not availability_formset.can_delete %}
+                                       <input type="hidden" name="{{ avail_form.prefix }}-DELETE" id="id_{{ avail_form.prefix }}-DELETE">
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <p class="text-sm text-gray-600 mt-4">{% trans "Vous pouvez ajouter ou supprimer des périodes de disponibilité. Assurez-vous que les dates ne se chevauchent pas." %}</p>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
+                    {% trans "Enregistrer et Publier le Logement" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+{% endblock %}

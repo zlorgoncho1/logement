@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ page_title|default:_("Mes Annonces") }}{% endblock %}
+
+{% block agent_content %}
+<div class="container mx-auto mt-10 px-4">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">{{ page_title|default:_("Mes Annonces de Logement") }}</h1>
+        <a href="{% url 'properties:property_add' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            {% trans "Ajouter un nouveau logement" %}
+        </a>
+    </div>
+
+    {% if messages %}
+        <div class="mb-4">
+        {% for message in messages %}
+            <div class="p-4 rounded-md 
+                {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700
+                {% elif message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700
+                {% else %}bg-blue-100 border border-blue-400 text-blue-700{% endif %}"
+                 role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if properties %}
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{% trans "Titre" %}</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{% trans "Adresse" %}</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{% trans "Prix/Nuit" %}</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{% trans "Statut" %}</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for property_item in properties %}
+                        <tr>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">{{ property_item.titre }}</p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">{{ property_item.adresse }}</p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <p class="text-gray-900 whitespace-no-wrap">{{ property_item.prix_par_nuit|floatformat:0 }} FCFA</p>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <span class="relative inline-block px-3 py-1 font-semibold leading-tight 
+                                    {% if property_item.statut == 'PUBLIE' %}text-green-900 bg-green-200
+                                    {% elif property_item.statut == 'DESACTIVE' %}text-red-900 bg-red-200
+                                    {% elif property_item.statut == 'ATTENTE' %}text-yellow-900 bg-yellow-200
+                                    {% else %}text-gray-700 bg-gray-200{% endif %} rounded-full">
+                                    {{ property_item.get_statut_display }}
+                                </span>
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm space-x-2">
+                                <a href="{% url 'properties:property_edit' property_item.pk %}" class="text-indigo-600 hover:text-indigo-900">{% trans "Modifier" %}</a>
+                                <a href="{% url 'properties:property_manage_availability' property_item.pk %}" class="text-blue-600 hover:text-blue-900">{% trans "Disponibilités" %}</a>
+                                
+                                {% if property_item.statut == 'PUBLIE' %}
+                                    <form action="{% url 'properties:property_deactivate' property_item.pk %}" method="post" class="inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-red-600 hover:text-red-900 font-normal p-0 bg-transparent border-none">{% trans "Désactiver" %}</button>
+                                    </form>
+                                {% elif property_item.statut == 'DESACTIVE' or property_item.statut == 'ATTENTE' %}
+                                    <form action="{% url 'properties:property_activate' property_item.pk %}" method="post" class="inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-green-600 hover:text-green-900 font-normal p-0 bg-transparent border-none">{% trans "Activer/Republier" %}</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if is_paginated %}
+            <div class="mt-8 flex justify-center">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">{% trans "Précédent" %}</span>
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                        </a>
+                    {% endif %}
+                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                        {% trans "Page" %} {{ page_obj.number }} {% trans "sur" %} {{ page_obj.paginator.num_pages }}
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">{% trans "Suivant" %}</span>
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                        </a>
+                    {% endif %}
+                </nav>
+            </div>
+        {% endif %}
+
+    {% else %}
+        <div class="text-center py-12">
+            <img src="{% static 'img/empty-box.svg' %}" alt="{% trans 'Aucune annonce' %}" class="mx-auto h-32 w-32 text-gray-400">
+            <h3 class="mt-2 text-xl font-medium text-gray-900">{% trans "Vous n'avez pas encore d'annonces." %}</h3>
+            <p class="mt-1 text-sm text-gray-500">{% trans "Commencez par ajouter votre premier logement!" %}</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

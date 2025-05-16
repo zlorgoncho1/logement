@@ -18,18 +18,26 @@
                     <a href="/" class="text-xl font-bold text-gray-800 hover:text-blue-500">LogeSénégal</a>
                 </div>
                 <div class="flex space-x-4">
-                    <a href="{% url 'index' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Accueil</a>
-                    <a href="{% url 'properties:property_search' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Rechercher un logement</a>
-                    <a href="#" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Publier un bien</a>
+                    {% if not user.is_authenticated or user.type != 'AGENT' %}
+                        <a href="{% url 'index' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Accueil</a>
+                        <a href="{% url 'properties:property_search' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Rechercher un logement</a>
+                    {% endif %}
+                    {% if user.is_authenticated and user.type == 'AGENT' %}
+                        <a href="{% url 'properties:property_add' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Publier un bien</a>
+                        <a href="{% url 'properties:agent_property_list' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Mes Annonces</a>
+                    {% endif %}
                     {% if user.is_authenticated %}
-                        <a href="{% url 'bookings:booking_list' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</a>
+                        {% if user.type == 'CLIENT' %}
+                            <a href="{% url 'bookings:booking_list' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</a>
+                        {% endif %}
                         <form action="{% url 'accounts:logout' %}" method="post" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Déconnexion</button>
                         </form>
                     {% else %}
                         <a href="{% url 'accounts:login' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Connexion</a>
-                        <a href="{% url 'accounts:register_start' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Inscription</a>
+                        <a href="{% url 'accounts:register_start' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Inscription Client</a>
+                        <a href="{% url 'accounts:agent_register' %}" class="text-gray-800 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Inscription Agent</a>
                     {% endif %}
                 </div>
             </div>
@@ -37,8 +45,16 @@
     </nav>
 
     <main class="flex-grow py-8 px-4 sm:px-6 lg:px-8">
-        {% block content %}
-        {% endblock %}
+        {% if user.is_authenticated and user.type == 'AGENT' %}
+            {% block agent_content %}
+            <div class="container mx-auto px-6 py-8">
+                <h1 class="text-2xl font-bold text-gray-800">Bienvenue sur LogeSénégal, Mr l'agent</h1>
+            </div>
+            {% endblock %}
+        {% else %}
+            {% block content %}
+            {% endblock %}
+        {% endif %}
     </main>
 
     <!-- Footer -->
